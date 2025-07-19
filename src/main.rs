@@ -48,8 +48,10 @@ fn main() {
             loop {
                 let mut try_again = String::new();
                 match stdin().read_line(&mut try_again) {
-                    Ok(_) => match try_again.trim() {
-                        val if val == "Y".to_string() => {
+                    Ok(_) => {
+                        let user_answer = try_again.trim();
+                        if user_answer.is_empty() // User hit enter
+                                                   || user_answer == "Y" || user_answer == "y" {
                             answer = rand::rng().random_range(LOW..=HIGH);
                             println!(
                                 "I created a random number from {LOW} to {HIGH}, you have {MAX_ATTEMPTS} attemps to guess"
@@ -57,13 +59,12 @@ fn main() {
                             attempt = 0;
                             break;
                         }
-                        val if val == "n".to_string() => {
+                        if user_answer == "n".to_string() {
                             println!("Goodbye! have a good day");
                             shutdown = true;
                             break;
-                        }
-                        _ => {
-                            println!("Sorry, your answer is invalid, you can either answer Y or n");
+                        } else {
+                            println!("Sorry, I don't understand. Please input Y/y or n");
                         }
                     },
                     Err(e) => {
